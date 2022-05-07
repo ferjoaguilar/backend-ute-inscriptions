@@ -8,6 +8,7 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/rs/cors"
+	"github.com/snowball-devs/backend-utec-inscriptions/database"
 )
 
 type Config struct {
@@ -54,6 +55,9 @@ func (b *broker) Start(binder func(s Server, r *mux.Router)) {
 	b.router = *mux.NewRouter()
 	binder(b, &b.router)
 
+	// Database
+	_, err := database.NewMongoRepository(b.config.DatabaseUrl)
+
 	// Cors settings
 	c := cors.New(cors.Options{
 		AllowedOrigins:   []string{"https://utec-inscriptions.feraguilar.tech", "http://localhost:3000"},
@@ -65,7 +69,7 @@ func (b *broker) Start(binder func(s Server, r *mux.Router)) {
 
 	// INIT REST SERVER
 	log.Println("Start server on port", b.config.Port)
-	err := http.ListenAndServe(b.config.Port, handler)
+	err = http.ListenAndServe(b.config.Port, handler)
 	if err != nil {
 		log.Fatal("ListenAndServe:", err)
 	}
