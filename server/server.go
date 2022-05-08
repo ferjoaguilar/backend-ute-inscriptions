@@ -9,6 +9,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/rs/cors"
 	"github.com/snowball-devs/backend-utec-inscriptions/database"
+	"github.com/snowball-devs/backend-utec-inscriptions/repository"
 )
 
 type Config struct {
@@ -56,7 +57,9 @@ func (b *broker) Start(binder func(s Server, r *mux.Router)) {
 	binder(b, &b.router)
 
 	// Database
-	_, err := database.NewMongoRepository(b.config.DatabaseUrl)
+	repo, err := database.NewMongoRepository(b.config.DatabaseUrl)
+
+	repository.SetUserRepository(repo)
 
 	// Cors settings
 	c := cors.New(cors.Options{

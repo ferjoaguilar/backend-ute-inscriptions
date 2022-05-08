@@ -2,13 +2,13 @@ package main
 
 import (
 	"context"
-	"encoding/json"
 	"log"
 	"net/http"
 	"os"
 
 	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
+	"github.com/snowball-devs/backend-utec-inscriptions/handler"
 	"github.com/snowball-devs/backend-utec-inscriptions/middleware"
 	"github.com/snowball-devs/backend-utec-inscriptions/server"
 )
@@ -43,21 +43,5 @@ func bindRoutes(s server.Server, r *mux.Router) {
 
 	api := r.PathPrefix("/api/v1").Subrouter()
 
-	api.HandleFunc("/", homeHandler(s)).Methods(http.MethodGet)
-}
-
-type HomeResponse struct {
-	Message string `json:"message"`
-	Status  bool   `json:"status"`
-}
-
-func homeHandler(s server.Server) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		//w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusOK)
-		json.NewEncoder(w).Encode(HomeResponse{
-			Message: "Welcome to API REST GOLANG",
-			Status:  true,
-		})
-	}
+	api.HandleFunc("/users", handler.SignupHandler(s)).Methods(http.MethodPost)
 }
