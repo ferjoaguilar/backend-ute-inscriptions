@@ -24,17 +24,20 @@ func SignupHandler(s server.Server) http.HandlerFunc {
 		err := json.NewDecoder(r.Body).Decode(&request)
 		if err != nil {
 			utils.ResponseWriter(w, http.StatusInternalServerError, "Error to parse json information", err)
+			return
 		}
 
 		var validate *validator.Validate = validator.New()
 		err = validate.Struct(&request)
 		if err != nil {
 			utils.ResponseWriter(w, http.StatusBadRequest, "Error to validation", err)
+			return
 		}
 
 		passHash, err := bcrypt.GenerateFromPassword([]byte(request.Password), 12)
 		if err != nil {
 			utils.ResponseWriter(w, http.StatusInternalServerError, "Error to hash password", err)
+			return
 		}
 
 		var newUser models.User = models.User{
@@ -47,6 +50,7 @@ func SignupHandler(s server.Server) http.HandlerFunc {
 
 		if err != nil {
 			utils.ResponseWriter(w, http.StatusInternalServerError, "Error to create new user", err)
+			return
 		}
 
 		w.WriteHeader(http.StatusCreated)
