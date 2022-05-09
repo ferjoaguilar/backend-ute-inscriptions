@@ -7,11 +7,19 @@ import (
 
 	"github.com/snowball-devs/backend-utec-inscriptions/database"
 	"github.com/snowball-devs/backend-utec-inscriptions/models"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/integration/mtest"
 )
 
+type userMock struct {
+	Key   string
+	Value interface{}
+}
+
 func TestCreateUser(t *testing.T) {
+	t.Parallel()
 	mt := mtest.New(t, mtest.NewOptions().ClientType(mtest.Mock))
 	defer mt.Close()
 
@@ -48,5 +56,41 @@ func TestCreateUser(t *testing.T) {
 		}
 
 	})
+}
 
+func TestLoginUser(t *testing.T) {
+	t.Parallel()
+	mt := mtest.New(t, mtest.NewOptions().ClientType(mtest.Mock))
+	defer mt.Close()
+
+	mt.Run("success", func(mt *mtest.T) {
+
+		expectedUser := models.User{
+			ID:        primitive.NewObjectID(),
+			Email:     "stefanylue123@gmail.com",
+			Username:  "stefanylue123",
+			Password:  "password2365889",
+			Disable:   false,
+			CreatedAt: time.Now(),
+		}
+
+		mt.AddMockResponses(mtest.CreateCursorResponse(1, "user.login", mtest.FirstBatch, bson.D{
+			primitive.E{Key: "_id", Value: expectedUser.ID},
+			primitive.E{Key: "email", Value: expectedUser.Email},
+			primitive.E{Key: "password", Value: expectedUser.Password},
+			primitive.E{Key: "disabled", Value: false},
+			primitive.E{Key: "createdat", Value: expectedUser.CreatedAt},
+		}))
+
+		mockdb := mt.DB
+		repo := database.MongodbRepository{DB: mockdb}
+		userResponse, err := repo.FindUserByEmail(context.Background(), expectedUser.Email)
+		if err != nil {
+			t.Errorf("TestLoginUser error, got %v", err)
+		}
+
+		if expectedUser.Email != userResponse.Email {
+			t.Errorf("TestLoginUser(success) was incorrect, got %v, want %v", userResponse.Email, expectedUser.Email)
+		}
+	})
 }
