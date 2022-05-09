@@ -41,6 +41,10 @@ func bindRoutes(s server.Server, r *mux.Router) {
 
 	r.Use(middleware.GlobalApplicationJson(s))
 	r.Use(middleware.AuthenticationMiddleware(s))
+
+	//Not found endpoint
+	r.NotFoundHandler = handler.NotFoundHandler(s)
+
 	api := r.PathPrefix("/api/v1").Subrouter()
 
 	api.HandleFunc("/users/signup", handler.SignupHandler(s)).Methods(http.MethodPost)
