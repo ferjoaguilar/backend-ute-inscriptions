@@ -9,6 +9,7 @@ import (
 
 type UserRepository interface {
 	CreateUser(ctx context.Context, user *models.User) (*mongo.InsertOneResult, error)
+	FindUserByEmail(ctx context.Context, email string) (*models.User, error)
 }
 
 var UserImplementation UserRepository
@@ -19,4 +20,8 @@ func SetUserRepository(repository UserRepository) {
 
 func CreateUser(ctx context.Context, user *models.User) (*mongo.InsertOneResult, error) {
 	return UserImplementation.CreateUser(ctx, user)
+}
+
+func FindUserByEmail(ctx context.Context, email string) (*models.User, error) {
+	return UserImplementation.FindUserByEmail(ctx, email)
 }
