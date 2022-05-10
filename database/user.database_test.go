@@ -94,3 +94,25 @@ func TestLoginUser(t *testing.T) {
 		}
 	})
 }
+
+func TestDisabledUser(t *testing.T) {
+	t.Parallel()
+
+	mt := mtest.New(t, mtest.NewOptions().ClientType(mtest.Mock))
+	defer mt.Close()
+
+	mt.Run("success", func(mt *mtest.T) {
+		expectedUser := models.User{
+			ID: primitive.NewObjectID(),
+		}
+
+		mt.AddMockResponses(mtest.CreateSuccessResponse())
+		mockdb := mt.DB
+		repo := database.MongodbRepository{DB: mockdb}
+		stringObjectId := expectedUser.ID.Hex()
+		_, err := repo.DisabledUser(context.Background(), stringObjectId)
+		if err != nil {
+			t.Errorf("TestDisabledUser(success) was incorrect, got %v, want %v", err, expectedUser.ID)
+		}
+	})
+}
