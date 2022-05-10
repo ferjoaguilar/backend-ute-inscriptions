@@ -2,6 +2,7 @@ package database
 
 import (
 	"context"
+	"errors"
 	"time"
 
 	"github.com/snowball-devs/backend-utec-inscriptions/models"
@@ -11,12 +12,27 @@ import (
 )
 
 func (repo *MongodbRepository) CreateUser(ctx context.Context, user *models.User) (*mongo.InsertOneResult, error) {
+
+	var findUser []models.User
+
+	find, err := repo.DB.Collection("users").Find(ctx, bson.M{"permissions": "manager"})
+
+	err = find.All(ctx, &findUser)
+	if err != nil {
+		return nil, err
+	}
+
+	if len(findUser) >= 3 {
+		return nil, errors.New("You have exceeded the maximum number of users")
+	}
+
 	newUser := models.User{
-		Email:     user.Email,
-		Username:  user.Username,
-		Password:  user.Password,
-		Disable:   false,
-		CreatedAt: time.Now(),
+		Email:       user.Email,
+		Username:    user.Username,
+		Password:    user.Password,
+		Permissions: user.Permissions,
+		Disable:     false,
+		CreatedAt:   time.Now(),
 	}
 
 	result, err := repo.DB.Collection("users").InsertOne(ctx, newUser)

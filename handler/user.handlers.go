@@ -16,9 +16,10 @@ import (
 )
 
 type signupRequest struct {
-	Email    string `json:"email,omitempty" validate:"required,email"`
-	Username string `json:"username,omitempty" validate:"required,min=3,max=25"`
-	Password string `json:"password,omitempty" validate:"required,min=5,max=75"`
+	Email       string `json:"email,omitempty" validate:"required,email"`
+	Username    string `json:"username,omitempty" validate:"required,min=3,max=25"`
+	Password    string `json:"password,omitempty" validate:"required,min=5,max=75"`
+	Permissions string `json:"permissions,omitempty" validate:"required,oneof=manager student"`
 }
 
 type loginRequest struct {
@@ -58,9 +59,10 @@ func SignupHandler(s server.Server) http.HandlerFunc {
 		}
 
 		var newUser models.User = models.User{
-			Email:    request.Email,
-			Username: request.Username,
-			Password: string(passHash),
+			Email:       request.Email,
+			Username:    request.Username,
+			Password:    string(passHash),
+			Permissions: request.Permissions,
 		}
 
 		response, err := repository.CreateUser(r.Context(), &newUser)

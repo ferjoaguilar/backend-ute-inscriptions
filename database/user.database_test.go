@@ -29,11 +29,12 @@ func TestCreateUser(t *testing.T) {
 		mockdb := mt.DB
 		repo := database.MongodbRepository{DB: mockdb}
 		insertedUser, err := repo.CreateUser(context.Background(), &models.User{
-			Email:     "stefanylue123@gmail.com",
-			Username:  "stefanylue123",
-			Password:  "password2365889",
-			Disable:   false,
-			CreatedAt: time.Now(),
+			Email:       "stefanylue123@gmail.com",
+			Username:    "stefanylue123",
+			Password:    "password2365889",
+			Permissions: "manager",
+			Disable:     false,
+			CreatedAt:   time.Now(),
 		})
 
 		if err != nil {
