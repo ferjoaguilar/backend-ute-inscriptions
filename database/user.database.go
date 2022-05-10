@@ -6,6 +6,7 @@ import (
 
 	"github.com/snowball-devs/backend-utec-inscriptions/models"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -35,4 +36,23 @@ func (repo *MongodbRepository) FindUserByEmail(ctx context.Context, email string
 	}
 
 	return user, nil
+}
+
+func (repo *MongodbRepository) DisabledUser(ctx context.Context, id string) (string, error) {
+
+	objId, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return "", err
+	}
+
+	result, err := repo.DB.Collection("users").UpdateOne(ctx, bson.M{"_id": objId}, bson.D{
+		{"$set", bson.D{{"disable", true}}},
+	})
+
+	if result.MatchedCount == 1 {
+		return "User disabled successfully", nil
+	}
+
+	return "", nil
+
 }

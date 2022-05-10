@@ -7,6 +7,7 @@ import (
 
 	"github.com/go-playground/validator/v10"
 	"github.com/golang-jwt/jwt/v4"
+	"github.com/gorilla/mux"
 	"github.com/snowball-devs/backend-utec-inscriptions/models"
 	"github.com/snowball-devs/backend-utec-inscriptions/repository"
 	"github.com/snowball-devs/backend-utec-inscriptions/server"
@@ -28,6 +29,10 @@ type loginRequest struct {
 type loginResponse struct {
 	Username string `json:"username"`
 	Token    string `json:"token"`
+}
+
+type disabledResponse struct {
+	Message string `json:"message"`
 }
 
 func SignupHandler(s server.Server) http.HandlerFunc {
@@ -125,5 +130,24 @@ func LoginHandler(s server.Server) http.HandlerFunc {
 			Username: user.Username,
 			Token:    tokenString,
 		})
+	}
+}
+
+func DisabledUser(s server.Server) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		params := mux.Vars(r)
+		userId := params["userId"]
+
+		response, err := repository.DisabledUser(r.Context(), userId)
+		if err != nil {
+			utils.ResponseWriter(w, http.StatusInternalServerError, "Error to disable user", err.Error())
+			return
+		}
+
+		w.WriteHeader(http.StatusOK)
+		json.NewEncoder(w).Encode(disabledResponse{
+			Message: response,
+		})
+
 	}
 }
