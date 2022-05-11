@@ -135,7 +135,7 @@ func LoginHandler(s server.Server) http.HandlerFunc {
 	}
 }
 
-func DisabledUser(s server.Server) http.HandlerFunc {
+func DisabledUserHandler(s server.Server) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		params := mux.Vars(r)
 		userId := params["userId"]
