@@ -72,3 +72,18 @@ func (repo *MongodbRepository) DisabledUser(ctx context.Context, id string) (str
 	return "", nil
 
 }
+
+func (repo *MongodbRepository) GetManagers(ctx context.Context) ([]models.User, error) {
+	result, err := repo.DB.Collection("users").Find(ctx, bson.M{"disable": false})
+	if err != nil {
+		return nil, err
+	}
+	var managerUsers []models.User
+	err = result.All(ctx, &managerUsers)
+	if err != nil {
+		return nil, err
+	}
+
+	return managerUsers, nil
+
+}

@@ -11,6 +11,7 @@ type UserRepository interface {
 	CreateUser(ctx context.Context, user *models.User) (*mongo.InsertOneResult, error)
 	FindUserByEmail(ctx context.Context, email string) (*models.User, error)
 	DisabledUser(ctx context.Context, id string) (string, error)
+	GetManagers(ctx context.Context) ([]models.User, error)
 }
 
 var UserImplementation UserRepository
@@ -29,4 +30,8 @@ func FindUserByEmail(ctx context.Context, email string) (*models.User, error) {
 
 func DisabledUser(ctx context.Context, id string) (string, error) {
 	return UserImplementation.DisabledUser(ctx, id)
+}
+
+func GetManagers(ctx context.Context) ([]models.User, error) {
+	return UserImplementation.GetManagers(ctx)
 }

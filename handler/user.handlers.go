@@ -153,3 +153,16 @@ func DisabledUser(s server.Server) http.HandlerFunc {
 
 	}
 }
+
+func GetManagersHandler(s server.Server) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		response, err := repository.GetManagers(r.Context())
+		if err != nil {
+			utils.ResponseWriter(w, http.StatusInternalServerError, "Error to get managers", err.Error())
+			return
+		}
+
+		w.WriteHeader(http.StatusOK)
+		json.NewEncoder(w).Encode(response)
+	}
+}
