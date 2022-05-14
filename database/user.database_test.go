@@ -19,22 +19,35 @@ type userMock struct {
 }
 
 func TestCreateUser(t *testing.T) {
-	t.Parallel()
+
 	mt := mtest.New(t, mtest.NewOptions().ClientType(mtest.Mock))
 	defer mt.Close()
 
 	mt.Run("success", func(mt *mtest.T) {
 
-		mt.AddMockResponses(mtest.CreateSuccessResponse())
+		id1 := primitive.NewObjectID()
+
+		first := mtest.CreateCursorResponse(1, "users.foo", mtest.FirstBatch, bson.D{
+			primitive.E{Key: "id", Value: id1},
+			primitive.E{Key: "email", Value: "stefanylue123@gmail.com"},
+			primitive.E{Key: "username", Value: "stefanylue123"},
+			primitive.E{Key: "password", Value: "vanilla12345"},
+			primitive.E{Key: "permissions", Value: "manager"},
+			primitive.E{Key: "disabled", Value: true},
+			primitive.E{Key: "created_at", Value: time.Now()},
+		})
+
+		killCursors := mtest.CreateCursorResponse(0, "user.foo", mtest.NextBatch)
+		mt.AddMockResponses(first, killCursors, mtest.CreateSuccessResponse())
+
 		mockdb := mt.DB
 		repo := database.MongodbRepository{DB: mockdb}
+
 		insertedUser, err := repo.CreateUser(context.Background(), &models.User{
-			Email:       "stefanylue123@gmail.com",
-			Username:    "stefanylue123",
+			Email:       "nepeloco2022@gmail.com",
+			Username:    "vicflores2211",
 			Password:    "password2365889",
 			Permissions: "manager",
-			Disable:     false,
-			CreatedAt:   time.Now(),
 		})
 
 		if err != nil {
@@ -43,7 +56,22 @@ func TestCreateUser(t *testing.T) {
 	})
 
 	mt.Run("error duplicate user", func(mt *mtest.T) {
-		mt.AddMockResponses(mtest.CreateWriteErrorsResponse(mtest.WriteError{
+
+		id1 := primitive.NewObjectID()
+
+		first := mtest.CreateCursorResponse(1, "users.foo", mtest.FirstBatch, bson.D{
+			primitive.E{Key: "id", Value: id1},
+			primitive.E{Key: "email", Value: "stefanylue123@gmail.com"},
+			primitive.E{Key: "username", Value: "stefanylue123"},
+			primitive.E{Key: "password", Value: "vanilla12345"},
+			primitive.E{Key: "permissions", Value: "manager"},
+			primitive.E{Key: "disabled", Value: true},
+			primitive.E{Key: "created_at", Value: time.Now()},
+		})
+
+		killCursors := mtest.CreateCursorResponse(0, "user.foo", mtest.NextBatch)
+
+		mt.AddMockResponses(first, killCursors, mtest.CreateWriteErrorsResponse(mtest.WriteError{
 			Index:   1,
 			Code:    11000,
 			Message: "duplicate key error",
