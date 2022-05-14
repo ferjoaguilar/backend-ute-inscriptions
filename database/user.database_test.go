@@ -27,7 +27,7 @@ func TestCreateUser(t *testing.T) {
 
 		id1 := primitive.NewObjectID()
 
-		first := mtest.CreateCursorResponse(1, "users.foo", mtest.FirstBatch, bson.D{
+		first := mtest.CreateCursorResponse(1, "users.utec", mtest.FirstBatch, bson.D{
 			primitive.E{Key: "id", Value: id1},
 			primitive.E{Key: "email", Value: "stefanylue123@gmail.com"},
 			primitive.E{Key: "username", Value: "stefanylue123"},
@@ -37,15 +37,15 @@ func TestCreateUser(t *testing.T) {
 			primitive.E{Key: "created_at", Value: time.Now()},
 		})
 
-		killCursors := mtest.CreateCursorResponse(0, "user.foo", mtest.NextBatch)
+		killCursors := mtest.CreateCursorResponse(0, "users.utec", mtest.NextBatch)
 		mt.AddMockResponses(first, killCursors, mtest.CreateSuccessResponse())
 
 		mockdb := mt.DB
 		repo := database.MongodbRepository{DB: mockdb}
 
 		insertedUser, err := repo.CreateUser(context.Background(), &models.User{
-			Email:       "nepeloco2022@gmail.com",
-			Username:    "vicflores2211",
+			Email:       "feraguilar6985@gmail.com",
+			Username:    "feraguilar6985",
 			Password:    "password2365889",
 			Permissions: "manager",
 		})
@@ -59,7 +59,7 @@ func TestCreateUser(t *testing.T) {
 
 		id1 := primitive.NewObjectID()
 
-		first := mtest.CreateCursorResponse(1, "users.foo", mtest.FirstBatch, bson.D{
+		first := mtest.CreateCursorResponse(1, "users.utec", mtest.FirstBatch, bson.D{
 			primitive.E{Key: "id", Value: id1},
 			primitive.E{Key: "email", Value: "stefanylue123@gmail.com"},
 			primitive.E{Key: "username", Value: "stefanylue123"},
@@ -69,7 +69,7 @@ func TestCreateUser(t *testing.T) {
 			primitive.E{Key: "created_at", Value: time.Now()},
 		})
 
-		killCursors := mtest.CreateCursorResponse(0, "user.foo", mtest.NextBatch)
+		killCursors := mtest.CreateCursorResponse(0, "user.utec", mtest.NextBatch)
 
 		mt.AddMockResponses(first, killCursors, mtest.CreateWriteErrorsResponse(mtest.WriteError{
 			Index:   1,
@@ -103,7 +103,7 @@ func TestLoginUser(t *testing.T) {
 			CreatedAt: time.Now(),
 		}
 
-		mt.AddMockResponses(mtest.CreateCursorResponse(1, "user.login", mtest.FirstBatch, bson.D{
+		mt.AddMockResponses(mtest.CreateCursorResponse(1, "user.utec", mtest.FirstBatch, bson.D{
 			primitive.E{Key: "_id", Value: expectedUser.ID},
 			primitive.E{Key: "email", Value: expectedUser.Email},
 			primitive.E{Key: "password", Value: expectedUser.Password},
@@ -154,7 +154,7 @@ func TestGetManagers(t *testing.T) {
 	mt.Run("success", func(mt *mtest.T) {
 		id1 := primitive.NewObjectID()
 
-		first := mtest.CreateCursorResponse(1, "users.foo", mtest.FirstBatch, bson.D{
+		first := mtest.CreateCursorResponse(1, "users.utec", mtest.FirstBatch, bson.D{
 			primitive.E{Key: "id", Value: id1},
 			primitive.E{Key: "email", Value: "stefanylue123@gmail.com"},
 			primitive.E{Key: "username", Value: "stefanylue123"},
@@ -164,7 +164,7 @@ func TestGetManagers(t *testing.T) {
 			primitive.E{Key: "created_at", Value: time.Now()},
 		})
 
-		killCursors := mtest.CreateCursorResponse(0, "user.foo", mtest.NextBatch)
+		killCursors := mtest.CreateCursorResponse(0, "user.utec", mtest.NextBatch)
 		mt.AddMockResponses(first, killCursors)
 
 		mockdb := mt.DB
