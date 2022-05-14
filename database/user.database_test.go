@@ -147,34 +147,52 @@ func TestDisabledUser(t *testing.T) {
 }
 
 func TestGetManagers(t *testing.T) {
+
+	// Start settings
 	t.Parallel()
 	mt := mtest.New(t, mtest.NewOptions().ClientType(mtest.Mock))
 	defer mt.Close()
 
-	mt.Run("success", func(mt *mtest.T) {
-		id1 := primitive.NewObjectID()
+	// Mocks
+	expectedUser := bson.D{
+		primitive.E{Key: "id", Value: primitive.NewObjectID()},
+		primitive.E{Key: "email", Value: "stefanylue123@gmail.com"},
+		primitive.E{Key: "username", Value: "stefanylue123"},
+		primitive.E{Key: "password", Value: "vanilla12345"},
+		primitive.E{Key: "permissions", Value: "manager"},
+		primitive.E{Key: "disabled", Value: true},
+		primitive.E{Key: "created_at", Value: time.Now()},
+	}
 
-		first := mtest.CreateCursorResponse(1, "users.utec", mtest.FirstBatch, bson.D{
-			primitive.E{Key: "id", Value: id1},
-			primitive.E{Key: "email", Value: "stefanylue123@gmail.com"},
-			primitive.E{Key: "username", Value: "stefanylue123"},
-			primitive.E{Key: "password", Value: "vanilla12345"},
-			primitive.E{Key: "permissions", Value: "manager"},
-			primitive.E{Key: "disabled", Value: true},
-			primitive.E{Key: "created_at", Value: time.Now()},
+	// Table driven test
+	testCases := []struct {
+		Name     string
+		UserMock bson.D
+		Expected interface{}
+	}{
+		{
+			Name:     "Success Get users managers",
+			UserMock: expectedUser,
+			Expected: 1,
+		},
+	}
+
+	for _, tc := range testCases {
+		mt.Run(tc.Name, func(mt *mtest.T) {
+			first := mtest.CreateCursorResponse(1, "users.utec", mtest.FirstBatch, tc.UserMock)
+
+			killCursors := mtest.CreateCursorResponse(0, "user.utec", mtest.NextBatch)
+			mt.AddMockResponses(first, killCursors)
+
+			mockdb := mt.DB
+			repo := database.MongodbRepository{DB: mockdb}
+
+			usersManager, _ := repo.GetManagers(context.Background())
+
+			if len(usersManager) <= 0 {
+				t.Errorf("Test manager was incorrect, got %d, want %d", len(usersManager), tc.Expected)
+			}
 		})
-
-		killCursors := mtest.CreateCursorResponse(0, "user.utec", mtest.NextBatch)
-		mt.AddMockResponses(first, killCursors)
-
-		mockdb := mt.DB
-		repo := database.MongodbRepository{DB: mockdb}
-
-		_, err := repo.GetManagers(context.Background())
-
-		if err != nil {
-			t.Errorf("TestGetManagers(success)  was incorrect, got %v, want %v", err, "user managers arrays")
-		}
-	})
+	}
 
 }
