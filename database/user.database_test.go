@@ -145,3 +145,36 @@ func TestDisabledUser(t *testing.T) {
 		}
 	})
 }
+
+func TestGetManagers(t *testing.T) {
+	t.Parallel()
+	mt := mtest.New(t, mtest.NewOptions().ClientType(mtest.Mock))
+	defer mt.Close()
+
+	mt.Run("success", func(mt *mtest.T) {
+		id1 := primitive.NewObjectID()
+
+		first := mtest.CreateCursorResponse(1, "users.foo", mtest.FirstBatch, bson.D{
+			primitive.E{Key: "id", Value: id1},
+			primitive.E{Key: "email", Value: "stefanylue123@gmail.com"},
+			primitive.E{Key: "username", Value: "stefanylue123"},
+			primitive.E{Key: "password", Value: "vanilla12345"},
+			primitive.E{Key: "permissions", Value: "manager"},
+			primitive.E{Key: "disabled", Value: true},
+			primitive.E{Key: "created_at", Value: time.Now()},
+		})
+
+		killCursors := mtest.CreateCursorResponse(0, "user.foo", mtest.NextBatch)
+		mt.AddMockResponses(first, killCursors)
+
+		mockdb := mt.DB
+		repo := database.MongodbRepository{DB: mockdb}
+
+		_, err := repo.GetManagers(context.Background())
+
+		if err != nil {
+			t.Errorf("TestGetManagers(success)  was incorrect, got %v, want %v", err, "user managers arrays")
+		}
+	})
+
+}
