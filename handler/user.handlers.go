@@ -140,7 +140,7 @@ func DisabledUserHandler(s server.Server) http.HandlerFunc {
 		params := mux.Vars(r)
 		userId := params["userId"]
 
-		response, err := repository.DisabledUser(r.Context(), userId)
+		response, err := repository.DisableUser(r.Context(), userId)
 		if err != nil {
 			utils.ResponseWriter(w, http.StatusInternalServerError, "Error to disable user", err.Error())
 			return

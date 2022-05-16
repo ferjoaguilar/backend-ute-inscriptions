@@ -10,7 +10,7 @@ import (
 type UserRepository interface {
 	CreateUser(ctx context.Context, user *models.User) (*mongo.InsertOneResult, error)
 	FindUserByEmail(ctx context.Context, email string) (*models.User, error)
-	DisabledUser(ctx context.Context, id string) (string, error)
+	DisableUser(ctx context.Context, id string) (string, error)
 	GetManagers(ctx context.Context) ([]models.User, error)
 }
 
@@ -28,8 +28,8 @@ func FindUserByEmail(ctx context.Context, email string) (*models.User, error) {
 	return UserImplementation.FindUserByEmail(ctx, email)
 }
 
-func DisabledUser(ctx context.Context, id string) (string, error) {
-	return UserImplementation.DisabledUser(ctx, id)
+func DisableUser(ctx context.Context, id string) (string, error) {
+	return UserImplementation.DisableUser(ctx, id)
 }
 
 func GetManagers(ctx context.Context) ([]models.User, error) {
