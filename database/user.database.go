@@ -8,10 +8,9 @@ import (
 	"github.com/snowball-devs/backend-utec-inscriptions/models"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
-	"go.mongodb.org/mongo-driver/mongo"
 )
 
-func (repo *MongodbRepository) CreateUser(ctx context.Context, user *models.User) (*mongo.InsertOneResult, error) {
+func (repo *MongodbRepository) CreateUser(ctx context.Context, user *models.User) (string, error) {
 
 	var findUser []models.User
 
@@ -19,11 +18,11 @@ func (repo *MongodbRepository) CreateUser(ctx context.Context, user *models.User
 
 	err = find.All(ctx, &findUser)
 	if err != nil {
-		return nil, err
+		return "", err
 	}
 
 	if len(findUser) >= 3 {
-		return nil, errors.New("You have exceeded the maximum number of users")
+		return "", errors.New("You have exceeded the maximum number of users")
 	}
 
 	newUser := models.User{
@@ -35,12 +34,12 @@ func (repo *MongodbRepository) CreateUser(ctx context.Context, user *models.User
 		CreatedAt:   time.Now(),
 	}
 
-	result, err := repo.DB.Collection("users").InsertOne(ctx, newUser)
+	_, err = repo.DB.Collection("users").InsertOne(ctx, newUser)
 
 	if err != nil {
-		return nil, err
+		return "", err
 	}
-	return result, nil
+	return "New user created", nil
 }
 
 func (repo *MongodbRepository) FindUserByEmail(ctx context.Context, email string) (*models.User, error) {

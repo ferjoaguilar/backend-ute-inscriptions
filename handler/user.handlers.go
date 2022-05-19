@@ -22,6 +22,10 @@ type signupRequest struct {
 	Permissions string `json:"permissions,omitempty" validate:"required,oneof=manager student"`
 }
 
+type signupResponse struct {
+	Message string `json:"message"`
+}
+
 type loginRequest struct {
 	Email    string `json:"email,omitempty" validate:"required,email"`
 	Password string `json:"password,omitempty" validate:"required,min=5,max=75"`
@@ -73,7 +77,9 @@ func SignupHandler(s server.Server) http.HandlerFunc {
 		}
 
 		w.WriteHeader(http.StatusCreated)
-		json.NewEncoder(w).Encode(response)
+		json.NewEncoder(w).Encode(signupResponse{
+			Message: response,
+		})
 	}
 }
 
