@@ -52,8 +52,47 @@ func TestCreateUser(t *testing.T) {
 			t.Parallel()
 			repo.On("CreateUser", ctx, &tc.Input).Return("New user created", nil)
 			_, err := repository.CreateUser(ctx, &tc.Input)
-			if err != nil {
+			if err != tc.ExpectedError {
 				t.Errorf("Create user incorrect, go %v want %v", tc.ExpectedError, err)
+			}
+		})
+	}
+}
+
+func TestFindUserByEmail(t *testing.T) {
+	testCases := []struct {
+		Name            string
+		Input           string
+		ExpectedSuccess models.User
+		ExpectedError   error
+	}{
+		{
+			Name:  "Success Find user by email",
+			Input: "estefany.lue99@gmail.com",
+			ExpectedSuccess: models.User{
+				ID:          primitive.NewObjectID(),
+				Email:       "estefany.lue99@gmail.com",
+				Username:    "estefany.lue99",
+				Password:    "vanillagolang123",
+				Permissions: "manager",
+				Disable:     false,
+				CreatedAt:   time.Now(),
+			},
+			ExpectedError: nil,
+		},
+	}
+
+	ctx := context.Background()
+
+	for i := range testCases {
+		tc := testCases[i]
+
+		t.Run(tc.Name, func(t *testing.T) {
+			t.Parallel()
+			repo.On("FindUserByEmail", ctx, tc.Input).Return(&tc.ExpectedSuccess, nil)
+			_, err := repository.FindUserByEmail(ctx, tc.Input)
+			if err != tc.ExpectedError {
+				t.Errorf("Find user by email incorrect got %v want %v", err, tc.ExpectedError)
 			}
 		})
 	}
