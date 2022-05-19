@@ -97,3 +97,32 @@ func TestFindUserByEmail(t *testing.T) {
 		})
 	}
 }
+
+func TestDisableUser(t *testing.T) {
+	testCases := []struct {
+		Name          string
+		Input         primitive.ObjectID
+		ExpectedError error
+	}{
+		{
+			Name:          "Success disable user",
+			Input:         primitive.NewObjectID(),
+			ExpectedError: nil,
+		},
+	}
+
+	ctx := context.Background()
+
+	for i := range testCases {
+		tc := testCases[i]
+
+		t.Run(tc.Name, func(t *testing.T) {
+			t.Parallel()
+			repo.On("DisableUser", ctx, tc.Input.Hex()).Return("User updated successfully", nil)
+			_, err := repository.DisableUser(ctx, tc.Input.Hex())
+			if err != tc.ExpectedError {
+				t.Errorf("Disable user incorrect got %v want %v", err, tc.ExpectedError)
+			}
+		})
+	}
+}
