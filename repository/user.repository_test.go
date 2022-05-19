@@ -30,16 +30,8 @@ func TestCreateUser(t *testing.T) {
 		ExpectedError error
 	}{
 		{
-			Name: "Success Create new user",
-			Input: models.User{
-				ID:          primitive.NewObjectID(),
-				Email:       "estefany.lue99@gmail.com",
-				Username:    "estefany.lue99",
-				Password:    "vanillagolang123",
-				Permissions: "manager",
-				Disable:     false,
-				CreatedAt:   time.Now(),
-			},
+			Name:          "Success Create new user",
+			Input:         models.User{},
 			ExpectedError: nil,
 		},
 	}
