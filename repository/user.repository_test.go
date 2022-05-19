@@ -156,3 +156,35 @@ func TestGetManagers(t *testing.T) {
 	}
 
 }
+
+func TestGetUserById(t *testing.T) {
+	testCases := []struct {
+		Name            string
+		Input           string
+		ExpectedSuccess models.User
+		ExpectedError   error
+	}{
+		{
+			Name:            "Success Find user by Id",
+			Input:           "627af6017c27bd2f8488c03f",
+			ExpectedSuccess: models.User{},
+			ExpectedError:   nil,
+		},
+	}
+
+	ctx := context.Background()
+
+	for i := range testCases {
+		tc := testCases[i]
+
+		t.Run(tc.Name, func(t *testing.T) {
+			t.Parallel()
+			repo.On("GetUserById", ctx, tc.Input).Return(&tc.ExpectedSuccess, nil)
+			_, err := repository.GetUserById(ctx, tc.Input)
+			if err != tc.ExpectedError {
+				t.Errorf("Get user by Id incorrect got %v want %v", err, tc.ExpectedError)
+			}
+		})
+	}
+
+}

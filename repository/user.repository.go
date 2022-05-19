@@ -12,6 +12,7 @@ type UserRepository interface {
 	FindUserByEmail(ctx context.Context, email string) (*models.User, error)
 	DisableUser(ctx context.Context, id string) (string, error)
 	GetManagers(ctx context.Context) ([]models.User, error)
+	GetUserById(ctx context.Context, id string) (*models.User, error)
 }
 
 var UserImplementation UserRepository
@@ -34,4 +35,8 @@ func DisableUser(ctx context.Context, id string) (string, error) {
 
 func GetManagers(ctx context.Context) ([]models.User, error) {
 	return UserImplementation.GetManagers(ctx)
+}
+
+func GetUserById(ctx context.Context, id string) (*models.User, error) {
+	return UserImplementation.GetUserById(ctx, id)
 }

@@ -83,5 +83,20 @@ func (repo *MongodbRepository) GetManagers(ctx context.Context) ([]models.User, 
 	}
 
 	return managerUsers, nil
+}
 
+func (repo *MongodbRepository) GetUserById(ctx context.Context, id string) (*models.User, error) {
+	var user *models.User
+
+	objId, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return nil, err
+	}
+
+	err = repo.DB.Collection("users").FindOne(ctx, bson.M{"_id": objId}).Decode(&user)
+	if err != nil {
+		return nil, err
+	}
+
+	return user, nil
 }

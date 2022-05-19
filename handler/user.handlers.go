@@ -3,6 +3,7 @@ package handler
 import (
 	"encoding/json"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/go-playground/validator/v10"
@@ -12,6 +13,7 @@ import (
 	"github.com/snowball-devs/backend-utec-inscriptions/repository"
 	"github.com/snowball-devs/backend-utec-inscriptions/server"
 	"github.com/snowball-devs/backend-utec-inscriptions/utils"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -38,6 +40,13 @@ type loginResponse struct {
 
 type disabledResponse struct {
 	Message string `json:"message"`
+}
+
+type MeResponse struct {
+	ID          primitive.ObjectID `json:"id" bson:"_id,omitempty"`
+	Email       string             `json:"email"`
+	Username    string             `json:"username"`
+	Permissions string             `json:"permissions"`
 }
 
 func SignupHandler(s server.Server) http.HandlerFunc {
@@ -170,5 +179,37 @@ func GetManagersHandler(s server.Server) http.HandlerFunc {
 
 		w.WriteHeader(http.StatusOK)
 		json.NewEncoder(w).Encode(response)
+	}
+}
+
+func MetHandler(s server.Server) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		tokenString := strings.TrimSpace(r.Header.Get("Authorization"))
+
+		token, err := jwt.ParseWithClaims(tokenString, &models.AppClaims{}, func(token *jwt.Token) (interface{}, error) {
+			return []byte(s.Config().JWTSecret), nil
+		})
+
+		if err != nil {
+			utils.ResponseWriter(w, http.StatusInternalServerError, "Error to parse token", err.Error())
+			return
+		}
+
+		if claims, ok := token.Claims.(*models.AppClaims); ok && token.Valid {
+			user, err := repository.GetUserById(r.Context(), claims.UserId.Hex())
+			if err != nil {
+				utils.ResponseWriter(w, http.StatusInternalServerError, "Failed to get user logged", err.Error())
+				return
+			}
+
+			w.WriteHeader(http.StatusOK)
+			json.NewEncoder(w).Encode(MeResponse{
+				ID:          user.ID,
+				Email:       user.Email,
+				Username:    user.Username,
+				Permissions: user.Permissions,
+			})
+		}
+
 	}
 }
