@@ -126,3 +126,33 @@ func TestDisableUser(t *testing.T) {
 		})
 	}
 }
+
+func TestGetManagers(t *testing.T) {
+	testCases := []struct {
+		Name            string
+		ExpectedSuccess []models.User
+		ExpectedError   error
+	}{
+		{
+			Name:            "Success get users managers",
+			ExpectedSuccess: nil,
+			ExpectedError:   nil,
+		},
+	}
+
+	ctx := context.Background()
+
+	for i := range testCases {
+		tc := testCases[i]
+
+		t.Run(tc.Name, func(t *testing.T) {
+			t.Parallel()
+			repo.On("GetManagers", ctx).Return(tc.ExpectedSuccess, nil)
+			_, err := repository.GetManagers(ctx)
+			if err != tc.ExpectedError {
+				t.Errorf("Get managers incorrect got %v want %v", err, tc.ExpectedError)
+			}
+		})
+	}
+
+}
