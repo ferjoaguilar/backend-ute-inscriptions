@@ -11,6 +11,27 @@ type SignupRepository struct {
 	mock.Mock
 }
 
+// CompleteSignup provides a mock function with given fields: ctx, id
+func (_m *SignupRepository) CompleteSignup(ctx context.Context, id string) (string, error) {
+	ret := _m.Called(ctx, id)
+
+	var r0 string
+	if rf, ok := ret.Get(0).(func(context.Context, string) string); ok {
+		r0 = rf(ctx, id)
+	} else {
+		r0 = ret.Get(0).(string)
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(context.Context, string) error); ok {
+		r1 = rf(ctx, id)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // CreateSignup provides a mock function with given fields: ctx, signup
 func (_m *SignupRepository) CreateSignup(ctx context.Context, signup *models.Signup) (string, error) {
 	ret := _m.Called(ctx, signup)

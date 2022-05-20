@@ -65,3 +65,33 @@ func TestGetSignups(t *testing.T) {
 		})
 	}
 }
+
+func TestCompleteSignup(t *testing.T) {
+	testCases := []struct {
+		Name            string
+		Input           string
+		ExpectedSuccess string
+		ExpectedError   error
+	}{
+		{
+			Name:            "Success Complete signup",
+			Input:           "6287ca3afc46f44f97f656c3",
+			ExpectedSuccess: "Signup completed successfully",
+			ExpectedError:   nil,
+		},
+	}
+
+	ctx := context.Background()
+	for i := range testCases {
+		tc := testCases[i]
+
+		t.Run(tc.Name, func(t *testing.T) {
+			signupRepo.On("CompleteSignup", ctx, tc.Input).Return(tc.ExpectedSuccess, nil)
+			_, err := repository.CompleteSignup(ctx, tc.Input)
+			if err != tc.ExpectedError {
+				t.Errorf("Completed signup incorrect got %v want %v", err, tc.ExpectedError)
+			}
+		})
+	}
+
+}

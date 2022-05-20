@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/go-playground/validator/v10"
+	"github.com/gorilla/mux"
 	"github.com/snowball-devs/backend-utec-inscriptions/models"
 	"github.com/snowball-devs/backend-utec-inscriptions/repository"
 	"github.com/snowball-devs/backend-utec-inscriptions/server"
@@ -106,5 +107,22 @@ func GetSignupsHandler(s server.Server) http.HandlerFunc {
 
 		w.WriteHeader(http.StatusOK)
 		json.NewEncoder(w).Encode(getSignups{Signups: response})
+	}
+}
+
+func CompleteSignupHandler(s server.Server) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		params := mux.Vars(r)
+		signupId := params["signupId"]
+		response, err := repository.CompleteSignup(r.Context(), signupId)
+		if err != nil {
+			utils.ResponseWriter(w, http.StatusInternalServerError, "Error to complete signup", err.Error())
+			return
+		}
+
+		w.WriteHeader(http.StatusOK)
+		json.NewEncoder(w).Encode(disabledResponse{
+			Message: response,
+		})
 	}
 }

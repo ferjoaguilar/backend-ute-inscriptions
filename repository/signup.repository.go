@@ -10,6 +10,7 @@ import (
 type SignupRepository interface {
 	CreateSignup(ctx context.Context, signup *models.Signup) (string, error)
 	GetSignups(ctx context.Context, page int) ([]models.Signup, error)
+	CompleteSignup(ctx context.Context, id string) (string, error)
 }
 
 var SignupImplementations SignupRepository
@@ -24,4 +25,8 @@ func CreateSignup(ctx context.Context, signup *models.Signup) (string, error) {
 
 func GetSignups(ctx context.Context, page int) ([]models.Signup, error) {
 	return SignupImplementations.GetSignups(ctx, page)
+}
+
+func CompleteSignup(ctx context.Context, id string) (string, error) {
+	return SignupImplementations.CompleteSignup(ctx, id)
 }
