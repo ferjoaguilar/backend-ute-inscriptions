@@ -60,6 +60,7 @@ func (b *broker) Start(binder func(s Server, r *mux.Router)) {
 	repo, err := database.NewMongoRepository(b.config.DatabaseUrl)
 
 	repository.SetUserRepository(repo)
+	repository.SetSignupRepository(repo)
 
 	// Cors settings
 	c := cors.New(cors.Options{
