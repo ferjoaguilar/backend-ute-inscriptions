@@ -7,12 +7,12 @@ import (
 	"github.com/snowball-devs/backend-utec-inscriptions/models"
 )
 
-func (repo *MongodbRepository) CreateSignup(ctx context.Context, inscription models.Signup) (string, error) {
+func (repo *MongodbRepository) CreateSignup(ctx context.Context, signup *models.Signup) (string, error) {
 
-	inscription.Completed = false
-	inscription.CreatedAt = time.Now()
+	signup.Completed = false
+	signup.CreatedAt = time.Now()
 
-	_, err := repo.DB.Collection("inscriptions").InsertOne(ctx, inscription)
+	_, err := repo.DB.Collection("inscriptions").InsertOne(ctx, signup)
 
 	if err != nil {
 		return "", err

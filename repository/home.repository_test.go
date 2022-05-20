@@ -9,11 +9,15 @@ import (
 )
 
 var userRepo *mocks.UserRepository
+var signupRepo *mocks.SignupRepository
 
 // Init mock instance to unit testing
 func TestMain(m *testing.M) {
 	userRepo = &mocks.UserRepository{}
+	signupRepo = &mocks.SignupRepository{}
+
 	repository.SetUserRepository(userRepo)
+	repository.SetSignupRepository(signupRepo)
 	code := m.Run()
 	os.Exit(code)
 }

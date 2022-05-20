@@ -55,7 +55,7 @@ func CreateInscriptionHandler(s server.Server) http.HandlerFunc {
 			return
 		}
 
-		var newInscription models.Signup = models.Signup{
+		var newSignup models.Signup = models.Signup{
 			Name:      request.Name,
 			Lastname:  request.Lastname,
 			Age:       request.Age,
@@ -68,7 +68,7 @@ func CreateInscriptionHandler(s server.Server) http.HandlerFunc {
 			Graduated: request.Graduated,
 			User:      userId.Hex(),
 		}
-		response, err := repository.CreateSignup(r.Context(), newInscription)
+		response, err := repository.CreateSignup(r.Context(), &newSignup)
 
 		if err != nil {
 			utils.ResponseWriter(w, http.StatusInternalServerError, "Failed to create inscription", err.Error())

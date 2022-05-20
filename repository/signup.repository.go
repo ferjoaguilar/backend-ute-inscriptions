@@ -8,7 +8,7 @@ import (
 
 //go:generate mockery --name=SignupRepository
 type SignupRepository interface {
-	CreateSignup(ctx context.Context, inscription models.Signup) (string, error)
+	CreateSignup(ctx context.Context, signup *models.Signup) (string, error)
 }
 
 var SignupImplementations SignupRepository
@@ -17,6 +17,6 @@ func SetSignupRepository(repository SignupRepository) {
 	SignupImplementations = repository
 }
 
-func CreateSignup(ctx context.Context, inscription models.Signup) (string, error) {
-	return SignupImplementations.CreateSignup(ctx, inscription)
+func CreateSignup(ctx context.Context, signup *models.Signup) (string, error) {
+	return SignupImplementations.CreateSignup(ctx, signup)
 }
