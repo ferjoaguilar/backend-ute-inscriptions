@@ -31,3 +31,26 @@ func (_m *SignupRepository) CreateSignup(ctx context.Context, signup *models.Sig
 
 	return r0, r1
 }
+
+// GetSignups provides a mock function with given fields: ctx, page
+func (_m *SignupRepository) GetSignups(ctx context.Context, page int) ([]models.Signup, error) {
+	ret := _m.Called(ctx, page)
+
+	var r0 []models.Signup
+	if rf, ok := ret.Get(0).(func(context.Context, int) []models.Signup); ok {
+		r0 = rf(ctx, page)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]models.Signup)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(context.Context, int) error); ok {
+		r1 = rf(ctx, page)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}

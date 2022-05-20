@@ -54,4 +54,5 @@ func bindRoutes(s server.Server, r *mux.Router) {
 	api.HandleFunc("/users/me", handler.MetHandler(s)).Methods(http.MethodGet)
 
 	api.HandleFunc("/inscription", handler.CreateInscriptionHandler(s)).Methods(http.MethodPost)
+	api.HandleFunc("/inscription", handler.GetSignupsHandler(s)).Methods(http.MethodGet)
 }

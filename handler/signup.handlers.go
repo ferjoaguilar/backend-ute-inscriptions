@@ -3,6 +3,7 @@ package handler
 import (
 	"encoding/json"
 	"net/http"
+	"strconv"
 	"strings"
 
 	"github.com/go-playground/validator/v10"
@@ -28,6 +29,10 @@ type signupNewRequest struct {
 
 type signupNewResponse struct {
 	Message string `json:"message"`
+}
+
+type getSignups struct {
+	Signups []models.Signup `json:"signups"`
 }
 
 func CreateInscriptionHandler(s server.Server) http.HandlerFunc {
@@ -79,5 +84,27 @@ func CreateInscriptionHandler(s server.Server) http.HandlerFunc {
 		json.NewEncoder(w).Encode(signupNewResponse{
 			Message: response,
 		})
+	}
+}
+
+func GetSignupsHandler(s server.Server) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		pageStr := r.URL.Query().Get("page")
+
+		page, err := strconv.Atoi(pageStr)
+		if err != nil {
+			utils.ResponseWriter(w, http.StatusInternalServerError, "Failed getting query", err.Error())
+			return
+		}
+
+		response, err := repository.GetSignups(r.Context(), page)
+
+		if err != nil {
+			utils.ResponseWriter(w, http.StatusInternalServerError, "Failed get signups", err.Error())
+			return
+		}
+
+		w.WriteHeader(http.StatusOK)
+		json.NewEncoder(w).Encode(getSignups{Signups: response})
 	}
 }
