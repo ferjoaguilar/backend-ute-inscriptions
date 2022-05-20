@@ -2,25 +2,12 @@ package repository_test
 
 import (
 	"context"
-	"os"
 	"testing"
-	"time"
 
 	"github.com/snowball-devs/backend-utec-inscriptions/models"
 	"github.com/snowball-devs/backend-utec-inscriptions/repository"
-	"github.com/snowball-devs/backend-utec-inscriptions/repository/mocks"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
-
-var repo *mocks.UserRepository
-
-// Init mock instance to unit testing
-func TestMain(m *testing.M) {
-	repo = &mocks.UserRepository{}
-	repository.SetUserRepository(repo)
-	code := m.Run()
-	os.Exit(code)
-}
 
 func TestCreateUser(t *testing.T) {
 
@@ -42,7 +29,7 @@ func TestCreateUser(t *testing.T) {
 
 		t.Run(tc.Name, func(t *testing.T) {
 			t.Parallel()
-			repo.On("CreateUser", ctx, &tc.Input).Return("New user created", nil)
+			userRepo.On("CreateUser", ctx, &tc.Input).Return("New user created", nil)
 			_, err := repository.CreateUser(ctx, &tc.Input)
 			if err != tc.ExpectedError {
 				t.Errorf("Create user incorrect, go %v want %v", tc.ExpectedError, err)
@@ -59,18 +46,10 @@ func TestFindUserByEmail(t *testing.T) {
 		ExpectedError   error
 	}{
 		{
-			Name:  "Success Find user by email",
-			Input: "estefany.lue99@gmail.com",
-			ExpectedSuccess: models.User{
-				ID:          primitive.NewObjectID(),
-				Email:       "estefany.lue99@gmail.com",
-				Username:    "estefany.lue99",
-				Password:    "vanillagolang123",
-				Permissions: "manager",
-				Disable:     false,
-				CreatedAt:   time.Now(),
-			},
-			ExpectedError: nil,
+			Name:            "Success Find user by email",
+			Input:           "estefany.lue99@gmail.com",
+			ExpectedSuccess: models.User{},
+			ExpectedError:   nil,
 		},
 	}
 
@@ -81,7 +60,7 @@ func TestFindUserByEmail(t *testing.T) {
 
 		t.Run(tc.Name, func(t *testing.T) {
 			t.Parallel()
-			repo.On("FindUserByEmail", ctx, tc.Input).Return(&tc.ExpectedSuccess, nil)
+			userRepo.On("FindUserByEmail", ctx, tc.Input).Return(&tc.ExpectedSuccess, nil)
 			_, err := repository.FindUserByEmail(ctx, tc.Input)
 			if err != tc.ExpectedError {
 				t.Errorf("Find user by email incorrect got %v want %v", err, tc.ExpectedError)
@@ -110,7 +89,7 @@ func TestDisableUser(t *testing.T) {
 
 		t.Run(tc.Name, func(t *testing.T) {
 			t.Parallel()
-			repo.On("DisableUser", ctx, tc.Input.Hex()).Return("User updated successfully", nil)
+			userRepo.On("DisableUser", ctx, tc.Input.Hex()).Return("User updated successfully", nil)
 			_, err := repository.DisableUser(ctx, tc.Input.Hex())
 			if err != tc.ExpectedError {
 				t.Errorf("Disable user incorrect got %v want %v", err, tc.ExpectedError)
@@ -139,7 +118,7 @@ func TestGetManagers(t *testing.T) {
 
 		t.Run(tc.Name, func(t *testing.T) {
 			t.Parallel()
-			repo.On("GetManagers", ctx).Return(tc.ExpectedSuccess, nil)
+			userRepo.On("GetManagers", ctx).Return(tc.ExpectedSuccess, nil)
 			_, err := repository.GetManagers(ctx)
 			if err != tc.ExpectedError {
 				t.Errorf("Get managers incorrect got %v want %v", err, tc.ExpectedError)
@@ -171,7 +150,7 @@ func TestGetUserById(t *testing.T) {
 
 		t.Run(tc.Name, func(t *testing.T) {
 			t.Parallel()
-			repo.On("GetUserById", ctx, tc.Input).Return(&tc.ExpectedSuccess, nil)
+			userRepo.On("GetUserById", ctx, tc.Input).Return(&tc.ExpectedSuccess, nil)
 			_, err := repository.GetUserById(ctx, tc.Input)
 			if err != tc.ExpectedError {
 				t.Errorf("Get user by Id incorrect got %v want %v", err, tc.ExpectedError)
