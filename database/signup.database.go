@@ -30,7 +30,7 @@ func (repo *MongodbRepository) GetSignups(ctx context.Context, page int) ([]mode
 	skip := int64(page)
 	fOpt := options.FindOptions{Limit: &l, Skip: &skip}
 
-	result, err := repo.DB.Collection("inscriptions").Find(ctx, bson.M{}, &fOpt)
+	result, err := repo.DB.Collection("inscriptions").Find(ctx, bson.M{"completed": false}, &fOpt)
 	if err != nil {
 		return nil, err
 	}

@@ -35,7 +35,7 @@ type getSignups struct {
 	Signups []models.Signup `json:"signups"`
 }
 
-func CreateInscriptionHandler(s server.Server) http.HandlerFunc {
+func CreateSignup(s server.Server) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var request = signupNewRequest{}
 
