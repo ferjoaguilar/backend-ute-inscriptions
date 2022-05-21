@@ -8,6 +8,7 @@ import (
 	"github.com/snowball-devs/backend-utec-inscriptions/models"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 func (repo *MongodbRepository) CreateSignup(ctx context.Context, signup *models.Signup) (string, error) {
@@ -25,14 +26,17 @@ func (repo *MongodbRepository) CreateSignup(ctx context.Context, signup *models.
 
 }
 
-func (repo *MongodbRepository) GetSignups(ctx context.Context) ([]models.Signup, error) {
+func (repo *MongodbRepository) GetSignups(ctx context.Context) ([]models.SignupLookup, error) {
 
-	result, err := repo.DB.Collection("inscriptions").Find(ctx, bson.M{"completed": false})
+	lookupStage := bson.D{{"$lookup", bson.D{{"from", "users"}, {"localField", "user"}, {"foreignField", "_id"}, {"as", "user"}}}}
+	unwindStage := bson.D{{"$unwind", bson.D{{"path", "$user"}, {"preserveNullAndEmptyArrays", false}}}}
+
+	result, err := repo.DB.Collection("inscriptions").Aggregate(ctx, mongo.Pipeline{lookupStage, unwindStage})
 	if err != nil {
 		return nil, err
 	}
 
-	var signups []models.Signup
+	var signups []models.SignupLookup
 
 	err = result.All(ctx, &signups)
 	if err != nil {

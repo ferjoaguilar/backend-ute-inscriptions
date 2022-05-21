@@ -11,20 +11,21 @@ import (
 	"github.com/snowball-devs/backend-utec-inscriptions/repository"
 	"github.com/snowball-devs/backend-utec-inscriptions/server"
 	"github.com/snowball-devs/backend-utec-inscriptions/utils"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type signupNewRequest struct {
-	Name      string `json:"name" validate:"required,min=8,max=75"`
-	Lastname  string `json:"lastname" validate:"required,min=8,max=75"`
-	Age       int    `json:"age" validate:"required,min=15,max=60"`
-	Dni       string `json:"dni" validate:"required,min=10,max=10"`
-	Nit       string `json:"nit" validate:"required,min=17,max=17"`
-	Country   string `json:"country" validate:"required,min=5,max=50"`
-	City      string `json:"city" validate:"required,min=5,max=50"`
-	Address   string `json:"address" validate:"required,min=8,max=100"`
-	Cellphone string `json:"cellphone" validate:"required,min=8,max=12"`
-	Graduated string `json:"graduated" validate:"required,min=8,max=100"`
-	User      string `json:"user"`
+	Name      string             `json:"name" validate:"required,min=8,max=75"`
+	Lastname  string             `json:"lastname" validate:"required,min=8,max=75"`
+	Age       int                `json:"age" validate:"required,min=15,max=60"`
+	Dni       string             `json:"dni" validate:"required,min=10,max=10"`
+	Nit       string             `json:"nit" validate:"required,min=17,max=17"`
+	Country   string             `json:"country" validate:"required,min=5,max=50"`
+	City      string             `json:"city" validate:"required,min=5,max=50"`
+	Address   string             `json:"address" validate:"required,min=8,max=100"`
+	Cellphone string             `json:"cellphone" validate:"required,min=8,max=12"`
+	Graduated string             `json:"graduated" validate:"required,min=8,max=100"`
+	User      primitive.ObjectID `json:"user"`
 }
 
 type signupNewResponse struct {
@@ -32,7 +33,7 @@ type signupNewResponse struct {
 }
 
 type getSignups struct {
-	Signups []models.Signup `json:"signups"`
+	Signups []models.SignupLookup `json:"signups"`
 }
 
 func CreateSignup(s server.Server) http.HandlerFunc {
@@ -71,7 +72,7 @@ func CreateSignup(s server.Server) http.HandlerFunc {
 			Address:   request.Address,
 			Cellphone: request.Cellphone,
 			Graduated: request.Graduated,
-			User:      userId.Hex(),
+			User:      userId,
 		}
 		response, err := repository.CreateSignup(r.Context(), &newSignup)
 

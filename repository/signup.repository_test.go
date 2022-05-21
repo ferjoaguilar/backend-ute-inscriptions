@@ -40,12 +40,12 @@ func TestGetSignups(t *testing.T) {
 	testCases := []struct {
 		Name string
 
-		ExpectedSuccess []models.Signup
+		ExpectedSuccess []models.SignupLookup
 		ExpectedError   error
 	}{
 		{
 			Name:            "Success Get signups",
-			ExpectedSuccess: []models.Signup{},
+			ExpectedSuccess: []models.SignupLookup{},
 			ExpectedError:   nil,
 		},
 	}
