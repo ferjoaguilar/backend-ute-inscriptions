@@ -3,7 +3,6 @@ package handler
 import (
 	"encoding/json"
 	"net/http"
-	"strconv"
 	"strings"
 
 	"github.com/go-playground/validator/v10"
@@ -90,15 +89,8 @@ func CreateSignup(s server.Server) http.HandlerFunc {
 
 func GetSignupsHandler(s server.Server) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		pageStr := r.URL.Query().Get("page")
 
-		page, err := strconv.Atoi(pageStr)
-		if err != nil {
-			utils.ResponseWriter(w, http.StatusInternalServerError, "Failed getting query", err.Error())
-			return
-		}
-
-		response, err := repository.GetSignups(r.Context(), page)
+		response, err := repository.GetSignups(r.Context())
 
 		if err != nil {
 			utils.ResponseWriter(w, http.StatusInternalServerError, "Failed get signups", err.Error())

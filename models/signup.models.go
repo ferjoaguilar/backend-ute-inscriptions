@@ -16,8 +16,6 @@ type Signup struct {
 	Cellphone string    `json:"cellphone"`
 	Graduated string    `json:"graduated"`
 	User      string    `json:"user"`
-	Document  string    `json:"document"`
-	Comments  []string  `json:"comments"`
 	Completed bool      `json:"completed"`
 	CreatedAt time.Time `json:"created_at"`
 }

@@ -38,14 +38,13 @@ func TestCreateSignup(t *testing.T) {
 
 func TestGetSignups(t *testing.T) {
 	testCases := []struct {
-		Name            string
-		Input           int
+		Name string
+
 		ExpectedSuccess []models.Signup
 		ExpectedError   error
 	}{
 		{
 			Name:            "Success Get signups",
-			Input:           0,
 			ExpectedSuccess: []models.Signup{},
 			ExpectedError:   nil,
 		},
@@ -57,8 +56,8 @@ func TestGetSignups(t *testing.T) {
 
 		t.Run(tc.Name, func(t *testing.T) {
 			t.Parallel()
-			signupRepo.On("GetSignups", ctx, tc.Input).Return(tc.ExpectedSuccess, nil)
-			_, err := repository.GetSignups(ctx, tc.Input)
+			signupRepo.On("GetSignups", ctx).Return(tc.ExpectedSuccess, nil)
+			_, err := repository.GetSignups(ctx)
 			if err != tc.ExpectedError {
 				t.Errorf("Get signups incorrect got %v want %v", err, tc.ExpectedError)
 			}

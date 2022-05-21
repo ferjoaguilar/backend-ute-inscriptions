@@ -8,7 +8,6 @@ import (
 	"github.com/snowball-devs/backend-utec-inscriptions/models"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
-	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 func (repo *MongodbRepository) CreateSignup(ctx context.Context, signup *models.Signup) (string, error) {
@@ -26,12 +25,9 @@ func (repo *MongodbRepository) CreateSignup(ctx context.Context, signup *models.
 
 }
 
-func (repo *MongodbRepository) GetSignups(ctx context.Context, page int) ([]models.Signup, error) {
-	l := int64(5)
-	skip := int64(page)
-	fOpt := options.FindOptions{Limit: &l, Skip: &skip}
+func (repo *MongodbRepository) GetSignups(ctx context.Context) ([]models.Signup, error) {
 
-	result, err := repo.DB.Collection("inscriptions").Find(ctx, bson.M{"completed": false}, &fOpt)
+	result, err := repo.DB.Collection("inscriptions").Find(ctx, bson.M{"completed": false})
 	if err != nil {
 		return nil, err
 	}
