@@ -19,7 +19,7 @@ type Signup struct {
 	Cellphone string             `json:"cellphone"`
 	Graduated string             `json:"graduated"`
 	User      primitive.ObjectID `json:"user"`
-	Completed bool               `json:"completed"`
+	Status    string             `json:"status"`
 	CreatedAt time.Time          `json:"created_at"`
 }
 
@@ -36,6 +36,6 @@ type SignupLookup struct {
 	Cellphone string             `json:"cellphone"`
 	Graduated string             `json:"graduated"`
 	User      User               `json:"user"`
-	Completed bool               `json:"completed"`
+	Status    string             `json:"status"`
 	CreatedAt time.Time          `json:"created_at"`
 }

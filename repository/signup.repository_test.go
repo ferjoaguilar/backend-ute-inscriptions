@@ -38,13 +38,14 @@ func TestCreateSignup(t *testing.T) {
 
 func TestGetSignups(t *testing.T) {
 	testCases := []struct {
-		Name string
-
+		Name            string
+		Input           string
 		ExpectedSuccess []models.SignupLookup
 		ExpectedError   error
 	}{
 		{
 			Name:            "Success Get signups",
+			Input:           "approved",
 			ExpectedSuccess: []models.SignupLookup{},
 			ExpectedError:   nil,
 		},
@@ -56,41 +57,11 @@ func TestGetSignups(t *testing.T) {
 
 		t.Run(tc.Name, func(t *testing.T) {
 			t.Parallel()
-			signupRepo.On("GetSignups", ctx).Return(tc.ExpectedSuccess, nil)
-			_, err := repository.GetSignups(ctx)
+			signupRepo.On("GetSignups", ctx, tc.Input).Return(tc.ExpectedSuccess, nil)
+			_, err := repository.GetSignups(ctx, tc.Input)
 			if err != tc.ExpectedError {
 				t.Errorf("Get signups incorrect got %v want %v", err, tc.ExpectedError)
 			}
 		})
 	}
-}
-
-func TestCompleteSignup(t *testing.T) {
-	testCases := []struct {
-		Name            string
-		Input           string
-		ExpectedSuccess string
-		ExpectedError   error
-	}{
-		{
-			Name:            "Success Complete signup",
-			Input:           "6287ca3afc46f44f97f656c3",
-			ExpectedSuccess: "Signup completed successfully",
-			ExpectedError:   nil,
-		},
-	}
-
-	ctx := context.Background()
-	for i := range testCases {
-		tc := testCases[i]
-
-		t.Run(tc.Name, func(t *testing.T) {
-			signupRepo.On("CompleteSignup", ctx, tc.Input).Return(tc.ExpectedSuccess, nil)
-			_, err := repository.CompleteSignup(ctx, tc.Input)
-			if err != tc.ExpectedError {
-				t.Errorf("Completed signup incorrect got %v want %v", err, tc.ExpectedError)
-			}
-		})
-	}
-
 }

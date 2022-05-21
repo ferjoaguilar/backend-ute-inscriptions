@@ -9,8 +9,7 @@ import (
 //go:generate mockery --name=SignupRepository
 type SignupRepository interface {
 	CreateSignup(ctx context.Context, signup *models.Signup) (string, error)
-	GetSignups(ctx context.Context) ([]models.SignupLookup, error)
-	CompleteSignup(ctx context.Context, id string) (string, error)
+	GetSignups(ctx context.Context, status string) ([]models.SignupLookup, error)
 }
 
 var SignupImplementations SignupRepository
@@ -23,10 +22,6 @@ func CreateSignup(ctx context.Context, signup *models.Signup) (string, error) {
 	return SignupImplementations.CreateSignup(ctx, signup)
 }
 
-func GetSignups(ctx context.Context) ([]models.SignupLookup, error) {
-	return SignupImplementations.GetSignups(ctx)
-}
-
-func CompleteSignup(ctx context.Context, id string) (string, error) {
-	return SignupImplementations.CompleteSignup(ctx, id)
+func GetSignups(ctx context.Context, status string) ([]models.SignupLookup, error) {
+	return SignupImplementations.GetSignups(ctx, status)
 }

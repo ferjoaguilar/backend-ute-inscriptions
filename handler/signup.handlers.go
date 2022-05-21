@@ -6,7 +6,6 @@ import (
 	"strings"
 
 	"github.com/go-playground/validator/v10"
-	"github.com/gorilla/mux"
 	"github.com/snowball-devs/backend-utec-inscriptions/models"
 	"github.com/snowball-devs/backend-utec-inscriptions/repository"
 	"github.com/snowball-devs/backend-utec-inscriptions/server"
@@ -90,8 +89,13 @@ func CreateSignup(s server.Server) http.HandlerFunc {
 
 func GetSignupsHandler(s server.Server) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		statusStr := r.URL.Query().Get("status")
+		if statusStr == "" {
+			utils.ResponseWriter(w, http.StatusBadRequest, "This endpoint required query params call status", nil)
+			return
+		}
 
-		response, err := repository.GetSignups(r.Context())
+		response, err := repository.GetSignups(r.Context(), statusStr)
 
 		if err != nil {
 			utils.ResponseWriter(w, http.StatusInternalServerError, "Failed get signups", err.Error())
@@ -100,22 +104,5 @@ func GetSignupsHandler(s server.Server) http.HandlerFunc {
 
 		w.WriteHeader(http.StatusOK)
 		json.NewEncoder(w).Encode(getSignups{Signups: response})
-	}
-}
-
-func CompleteSignupHandler(s server.Server) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		params := mux.Vars(r)
-		signupId := params["signupId"]
-		response, err := repository.CompleteSignup(r.Context(), signupId)
-		if err != nil {
-			utils.ResponseWriter(w, http.StatusInternalServerError, "Error to complete signup", err.Error())
-			return
-		}
-
-		w.WriteHeader(http.StatusOK)
-		json.NewEncoder(w).Encode(disabledResponse{
-			Message: response,
-		})
 	}
 }
