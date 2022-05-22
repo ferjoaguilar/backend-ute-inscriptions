@@ -6,10 +6,10 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/ferjoaguilar/backend-utec-inscriptions/database"
+	"github.com/ferjoaguilar/backend-utec-inscriptions/repository"
 	"github.com/gorilla/mux"
 	"github.com/rs/cors"
-	"github.com/snowball-devs/backend-utec-inscriptions/database"
-	"github.com/snowball-devs/backend-utec-inscriptions/repository"
 )
 
 type Config struct {

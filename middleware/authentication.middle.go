@@ -4,10 +4,10 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/ferjoaguilar/backend-utec-inscriptions/models"
+	"github.com/ferjoaguilar/backend-utec-inscriptions/server"
+	"github.com/ferjoaguilar/backend-utec-inscriptions/utils"
 	"github.com/golang-jwt/jwt/v4"
-	"github.com/snowball-devs/backend-utec-inscriptions/models"
-	"github.com/snowball-devs/backend-utec-inscriptions/server"
-	"github.com/snowball-devs/backend-utec-inscriptions/utils"
 )
 
 var (

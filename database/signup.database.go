@@ -5,7 +5,7 @@ import (
 	"errors"
 	"time"
 
-	"github.com/snowball-devs/backend-utec-inscriptions/models"
+	"github.com/ferjoaguilar/backend-utec-inscriptions/models"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"

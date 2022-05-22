@@ -3,7 +3,7 @@ package middleware
 import (
 	"net/http"
 
-	"github.com/snowball-devs/backend-utec-inscriptions/server"
+	"github.com/ferjoaguilar/backend-utec-inscriptions/server"
 )
 
 func GlobalApplicationJson(s server.Server) func(h http.Handler) http.Handler {

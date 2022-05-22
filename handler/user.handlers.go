@@ -6,13 +6,13 @@ import (
 	"strings"
 	"time"
 
+	"github.com/ferjoaguilar/backend-utec-inscriptions/models"
+	"github.com/ferjoaguilar/backend-utec-inscriptions/repository"
+	"github.com/ferjoaguilar/backend-utec-inscriptions/server"
+	"github.com/ferjoaguilar/backend-utec-inscriptions/utils"
 	"github.com/go-playground/validator/v10"
 	"github.com/golang-jwt/jwt/v4"
 	"github.com/gorilla/mux"
-	"github.com/snowball-devs/backend-utec-inscriptions/models"
-	"github.com/snowball-devs/backend-utec-inscriptions/repository"
-	"github.com/snowball-devs/backend-utec-inscriptions/server"
-	"github.com/snowball-devs/backend-utec-inscriptions/utils"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"golang.org/x/crypto/bcrypt"
 )

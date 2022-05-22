@@ -1,4 +1,4 @@
-module github.com/snowball-devs/backend-utec-inscriptions
+module github.com/ferjoaguilar/backend-utec-inscriptions
 
 go 1.18
 

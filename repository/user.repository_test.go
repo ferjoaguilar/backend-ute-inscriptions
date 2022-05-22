@@ -4,8 +4,8 @@ import (
 	"context"
 	"testing"
 
-	"github.com/snowball-devs/backend-utec-inscriptions/models"
-	"github.com/snowball-devs/backend-utec-inscriptions/repository"
+	"github.com/ferjoaguilar/backend-utec-inscriptions/models"
+	"github.com/ferjoaguilar/backend-utec-inscriptions/repository"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 

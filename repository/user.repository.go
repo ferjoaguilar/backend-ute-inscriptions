@@ -3,7 +3,7 @@ package repository
 import (
 	"context"
 
-	"github.com/snowball-devs/backend-utec-inscriptions/models"
+	"github.com/ferjoaguilar/backend-utec-inscriptions/models"
 )
 
 //go:generate mockery --name=UserRepository

@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/snowball-devs/backend-utec-inscriptions/server"
+	"github.com/ferjoaguilar/backend-utec-inscriptions/server"
 )
 
 type notFound struct {

@@ -6,11 +6,11 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/ferjoaguilar/backend-utec-inscriptions/handler"
+	"github.com/ferjoaguilar/backend-utec-inscriptions/middleware"
+	"github.com/ferjoaguilar/backend-utec-inscriptions/server"
 	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
-	"github.com/snowball-devs/backend-utec-inscriptions/handler"
-	"github.com/snowball-devs/backend-utec-inscriptions/middleware"
-	"github.com/snowball-devs/backend-utec-inscriptions/server"
 )
 
 func main() {

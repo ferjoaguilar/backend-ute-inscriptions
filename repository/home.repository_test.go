@@ -4,8 +4,8 @@ import (
 	"os"
 	"testing"
 
-	"github.com/snowball-devs/backend-utec-inscriptions/repository"
-	"github.com/snowball-devs/backend-utec-inscriptions/repository/mocks"
+	"github.com/ferjoaguilar/backend-utec-inscriptions/repository"
+	"github.com/ferjoaguilar/backend-utec-inscriptions/repository/mocks"
 )
 
 var userRepo *mocks.UserRepository

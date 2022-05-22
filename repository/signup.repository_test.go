@@ -4,8 +4,8 @@ import (
 	"context"
 	"testing"
 
-	"github.com/snowball-devs/backend-utec-inscriptions/models"
-	"github.com/snowball-devs/backend-utec-inscriptions/repository"
+	"github.com/ferjoaguilar/backend-utec-inscriptions/models"
+	"github.com/ferjoaguilar/backend-utec-inscriptions/repository"
 )
 
 func TestCreateSignup(t *testing.T) {

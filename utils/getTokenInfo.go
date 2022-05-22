@@ -3,9 +3,9 @@ package utils
 import (
 	"errors"
 
+	"github.com/ferjoaguilar/backend-utec-inscriptions/models"
+	"github.com/ferjoaguilar/backend-utec-inscriptions/server"
 	"github.com/golang-jwt/jwt/v4"
-	"github.com/snowball-devs/backend-utec-inscriptions/models"
-	"github.com/snowball-devs/backend-utec-inscriptions/server"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
