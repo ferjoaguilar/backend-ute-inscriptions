@@ -11,13 +11,11 @@ import (
 	"github.com/ferjoaguilar/backend-utec-inscriptions/server"
 	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
+	_ "github.com/joho/godotenv/autoload"
 )
 
 func main() {
-	err := godotenv.Load(".env")
-	if err != nil {
-		log.Fatal("Error to loading .env file")
-	}
+	_ = godotenv.Load(".env")
 
 	PORT := os.Getenv("PORT")
 	JWT_SECRET := os.Getenv("JWTSecret")
