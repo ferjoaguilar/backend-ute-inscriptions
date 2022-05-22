@@ -7,6 +7,7 @@ import (
 
 	"github.com/snowball-devs/backend-utec-inscriptions/models"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -48,4 +49,20 @@ func (repo *MongodbRepository) GetSignups(ctx context.Context, status string) ([
 	}
 
 	return signups, nil
+}
+
+func (repo *MongodbRepository) ChangeStatus(ctx context.Context, id string, status string) (string, error) {
+	objId, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return "", err
+	}
+
+	result := repo.DB.Collection("inscriptions").FindOneAndUpdate(ctx, bson.M{"_id": objId}, bson.D{
+		{"$set", bson.D{{"status", status}}},
+	})
+
+	if result.Err() != nil {
+		return "", result.Err()
+	}
+	return "Student status updated successfully", nil
 }

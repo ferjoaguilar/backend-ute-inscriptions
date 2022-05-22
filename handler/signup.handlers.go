@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/go-playground/validator/v10"
+	"github.com/gorilla/mux"
 	"github.com/snowball-devs/backend-utec-inscriptions/models"
 	"github.com/snowball-devs/backend-utec-inscriptions/repository"
 	"github.com/snowball-devs/backend-utec-inscriptions/server"
@@ -33,6 +34,10 @@ type signupNewResponse struct {
 
 type getSignups struct {
 	Signups []models.SignupLookup `json:"signups"`
+}
+
+type changeStatusResponse struct {
+	Message string `json:"message"`
 }
 
 func CreateSignup(s server.Server) http.HandlerFunc {
@@ -104,5 +109,29 @@ func GetSignupsHandler(s server.Server) http.HandlerFunc {
 
 		w.WriteHeader(http.StatusOK)
 		json.NewEncoder(w).Encode(getSignups{Signups: response})
+	}
+}
+
+func ChangeStatusHandler(s server.Server) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		params := mux.Vars(r)
+		userId := params["userId"]
+
+		statusStr := r.URL.Query().Get("status")
+		if statusStr == "" {
+			utils.ResponseWriter(w, http.StatusBadRequest, "This endpoint required query params call status", nil)
+			return
+		}
+
+		response, err := repository.ChangeStatus(r.Context(), userId, statusStr)
+		if err != nil {
+			utils.ResponseWriter(w, http.StatusInternalServerError, "Failed to change status", err.Error())
+			return
+		}
+
+		w.WriteHeader(http.StatusOK)
+		json.NewEncoder(w).Encode(changeStatusResponse{
+			Message: response,
+		})
 	}
 }

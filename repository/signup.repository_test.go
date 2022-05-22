@@ -65,3 +65,34 @@ func TestGetSignups(t *testing.T) {
 		})
 	}
 }
+
+func TestChangeStatus(t *testing.T) {
+	testCases := []struct {
+		Name            string
+		InputOne        string
+		InputTwo        string
+		ExpectedSuccess string
+		ExpectedError   error
+	}{
+		{
+			Name:            "Success Change status",
+			InputOne:        "627af6017c27bd2f8488c03f",
+			InputTwo:        "pending",
+			ExpectedSuccess: "Student status updated successfully",
+			ExpectedError:   nil,
+		},
+	}
+
+	ctx := context.Background()
+
+	for i := range testCases {
+		tc := testCases[i]
+		t.Parallel()
+		signupRepo.On("ChangeStatus", ctx, tc.InputOne, tc.InputTwo).Return(tc.ExpectedSuccess, nil)
+		_, err := repository.ChangeStatus(ctx, tc.InputOne, tc.InputTwo)
+		if err != tc.ExpectedError {
+			t.Errorf("Change status incorrect got %v want %v", err, tc.ExpectedError)
+		}
+	}
+
+}
