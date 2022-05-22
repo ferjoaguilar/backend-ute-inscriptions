@@ -73,7 +73,7 @@ func (b *broker) Start(binder func(s Server, r *mux.Router)) {
 
 	// INIT REST SERVER
 	log.Println("Start server on port", b.config.Port)
-	err = http.ListenAndServe(b.config.Port, handler)
+	err = http.ListenAndServe(":"+b.config.Port, handler)
 	if err != nil {
 		log.Fatal("ListenAndServe:", err)
 	}
