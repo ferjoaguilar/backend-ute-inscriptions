@@ -40,6 +40,10 @@ type changeStatusResponse struct {
 	Message string `json:"message"`
 }
 
+type getSignupResponse struct {
+	Signup *models.Signup `json:"signup"`
+}
+
 func CreateSignup(s server.Server) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var request = signupNewRequest{}
@@ -132,6 +136,21 @@ func ChangeStatusHandler(s server.Server) http.HandlerFunc {
 		w.WriteHeader(http.StatusOK)
 		json.NewEncoder(w).Encode(changeStatusResponse{
 			Message: response,
+		})
+	}
+}
+
+func GetSignupHandler(s server.Server) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		params := mux.Vars(r)
+		userId := params["userId"]
+		response, err := repository.GetSignupById(r.Context(), userId)
+		if err != nil {
+			utils.ResponseWriter(w, http.StatusInternalServerError, "Failed get signup", err.Error())
+		}
+		w.WriteHeader(http.StatusOK)
+		json.NewEncoder(w).Encode(getSignupResponse{
+			Signup: response,
 		})
 	}
 }

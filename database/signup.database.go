@@ -66,3 +66,20 @@ func (repo *MongodbRepository) ChangeStatus(ctx context.Context, id string, stat
 	}
 	return "Student status updated successfully", nil
 }
+
+func (repo *MongodbRepository) GetSignupById(ctx context.Context, id string) (*models.Signup, error) {
+
+	var signup *models.Signup
+	objId, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return nil, err
+	}
+
+	err = repo.DB.Collection("inscriptions").FindOne(ctx, bson.M{"_id": objId}).Decode(&signup)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return signup, nil
+}

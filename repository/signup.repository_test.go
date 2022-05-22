@@ -96,3 +96,31 @@ func TestChangeStatus(t *testing.T) {
 	}
 
 }
+
+func TestGetSignupById(t *testing.T) {
+	testCases := []struct {
+		Name            string
+		Input           string
+		ExpectedSuccess models.Signup
+		ExpectedError   error
+	}{
+		{
+			Name:            "Success Get signup by Id",
+			Input:           "62894506ddaf96a5df37244c",
+			ExpectedSuccess: models.Signup{},
+			ExpectedError:   nil,
+		},
+	}
+
+	ctx := context.Background()
+
+	for i := range testCases {
+		tc := testCases[i]
+		t.Parallel()
+		signupRepo.On("GetSignupById", ctx, tc.Input).Return(&tc.ExpectedSuccess, nil)
+		_, err := repository.GetSignupById(ctx, tc.Input)
+		if err != tc.ExpectedError {
+			t.Errorf("Get signup by Id incorrect got %v want %v", err, tc.ExpectedError)
+		}
+	}
+}
