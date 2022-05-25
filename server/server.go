@@ -64,9 +64,10 @@ func (b *broker) Start(binder func(s Server, r *mux.Router)) {
 
 	// Cors settings
 	c := cors.New(cors.Options{
-		AllowedOrigins:   []string{"https://utec-inscriptions.feraguilar.tech", "http://localhost:3000"},
+		AllowedOrigins:   []string{"https://frontend-utec-inscriptions.vercel.app", "http://localhost:3000"},
 		AllowedMethods:   []string{http.MethodGet, http.MethodPost, http.MethodPut, http.MethodDelete},
 		AllowCredentials: true,
+		AllowedHeaders:   []string{"Authorization", "Content-Type"},
 	})
 
 	handler := c.Handler(&b.router)

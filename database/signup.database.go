@@ -75,7 +75,7 @@ func (repo *MongodbRepository) GetSignupById(ctx context.Context, id string) (*m
 		return nil, err
 	}
 
-	err = repo.DB.Collection("inscriptions").FindOne(ctx, bson.M{"_id": objId}).Decode(&signup)
+	err = repo.DB.Collection("inscriptions").FindOne(ctx, bson.M{"user": objId}).Decode(&signup)
 
 	if err != nil {
 		return nil, err

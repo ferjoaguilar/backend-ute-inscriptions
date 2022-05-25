@@ -13,6 +13,7 @@ import (
 var (
 	NO_AUTH_NEEDED = []string{
 		"login",
+		"signup",
 	}
 )
 
